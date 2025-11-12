@@ -1,3 +1,6 @@
+import java.time.Instant;
+import java.util.List;
+
 public class Course {
     private int id;
     private int credit;
@@ -22,5 +25,21 @@ public class Course {
 
     public Teacher getTeacher() {
         return teacher;
+    }
+
+    public double getCourseGrade(Student student, Instant t , List<Exam> exams , List<Grade> allGrades) {
+        List<Exam> examList = exams.stream()
+                .filter(e -> e.getCourse().equals(this))
+                .toList();
+
+        double sum = examList.stream()
+                .mapToDouble(exam -> exam.getExamGrade(student , allGrades, t) * exam.getCoefficient())
+                .sum();
+
+        double coeffSum = examList.stream()
+                .mapToDouble(Exam::getCoefficient)
+                .sum();
+
+        return coeffSum == 0 ? 0 : sum / coeffSum;
     }
 }
