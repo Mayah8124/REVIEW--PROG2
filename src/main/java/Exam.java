@@ -1,4 +1,5 @@
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class Exam {
     private int id;
@@ -33,5 +34,24 @@ public class Exam {
 
     public String getTitle() {
         return title;
+    }
+
+    public double getFinalGrade(List<Grade> grades , List<Exam> exams) {
+        if (grades == null || exams == null || grades.size() != exams.size() || grades.isEmpty()) {
+            throw new IllegalArgumentException("Invalid or empty lists");
+        }
+
+        double sum = 0;
+        int coeffSum = 0;
+
+        for (int i =0 ; i < grades.size() ; i++) {
+            double value = grades.get(i).getGrade();
+            double coeff = exams.get(i).getCoefficient();
+
+            sum += value * coeff;
+            coeffSum += coeff;
+        }
+
+        return sum / coeffSum;
     }
 }
