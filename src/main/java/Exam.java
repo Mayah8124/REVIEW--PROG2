@@ -61,14 +61,14 @@ public class Exam {
         for (Grade grade : allGrades) {
             if (grade.getStudent().equals(student) && grade.getCourse().equals(this.course)) {
                 double value = 0;
-                Instant lastMaj = Instant.EPOCH;
+                Instant lastMaj = Instant.MIN;
 
                 for (GradeHistory history : grade.getHistory()) {
                     Instant dateHistory = history.getDateTime()
                             .atZone(ZoneId.systemDefault())
                             .toInstant();
 
-                    if (dateHistory.isAfter(t) && dateHistory.isBefore(lastMaj)) {
+                    if (!dateHistory.isAfter(t) && dateHistory.isAfter(lastMaj)) {
                         value = history.getValue();
                         lastMaj = dateHistory;
                     }

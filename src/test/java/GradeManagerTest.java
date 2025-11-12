@@ -43,7 +43,7 @@ public class GradeManagerTest {
 
         double result = exam.getExamGrade(student , allGrades ,examInstant);
 
-        assertEquals(17.0 , result , 0.001);
+        assertEquals(14 , result , 0.001);
     }
 
     @Test
@@ -69,7 +69,9 @@ public class GradeManagerTest {
         );
 
         Grade grade1 = new Grade(course, student, 14.0);
+        grade1.getHistory().add(new GradeHistory(16.0, LocalDateTime.now().minusDays(2), "retake"));
         Grade grade2 = new Grade(course, student, 18.0);
+        grade2.getHistory().add(new GradeHistory(20.0, LocalDateTime.now().minusDays(5), "retake"));
 
         List<Exam> exams = List.of(exam, exam2);
         List<Grade> grades = List.of(grade1, grade2);
@@ -78,6 +80,6 @@ public class GradeManagerTest {
 
         double courseGrade = course.getCourseGrade(student , now , exams , grades);
 
-        assertEquals(18.5 , courseGrade , 0.001);
+        assertEquals(14 , courseGrade , 0.001);
     }
 }
