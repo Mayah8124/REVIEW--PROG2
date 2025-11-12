@@ -1,4 +1,6 @@
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 public class Exam {
@@ -53,5 +55,27 @@ public class Exam {
         }
 
         return sum / coeffSum;
+    }
+
+    public double getExamGrade(Student student , List<Grade> allGrades , Instant t) {
+        for (Grade grade : allGrades) {
+            if (grade.getStudent().equals(student) && grade.getCourse().equals(this.course)) {
+                double value = 0;
+                Instant lastMaj = Instant.EPOCH;
+
+                for (gradeHistory history : grade.getHistory()) {
+                    Instant dateHistory = history.getDateTime()
+                            .atZone(ZoneId.systemDefault())
+                            .toInstant();
+
+                    if (dateHistory.isAfter(t) && dateHistory.isBefore(lastMaj)) {
+                        value = history.getValue();
+                        lastMaj = dateHistory;
+                    }
+                }
+                return value;
+            }
+        }
+        return 0.0;
     }
 }
