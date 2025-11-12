@@ -1,11 +1,21 @@
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Promotion {
-    private List<Student> group;
+    private String name;
+    private List<Group> group;
 
-    public Promotion(List<Student> group) {
+    public Promotion(String name) {
+        this.name = name;
         this.group = new ArrayList<>();
-        this.group.add(Student);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<Group> getGroup() {
+        return group;
     }
 }
