@@ -1,11 +1,11 @@
 import java.time.LocalDateTime;
 
-public class gradeHistory {
+public class GradeHistory {
     private double value;
     private LocalDateTime dateTime;
     private String motif;
 
-    public gradeHistory(LocalDateTime dateTime , String motif, double value) {
+    public GradeHistory(double value , LocalDateTime dateTime , String motif) {
         this.dateTime = dateTime;
         this.motif = motif;
         this.value = value;

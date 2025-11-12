@@ -63,7 +63,7 @@ public class Exam {
                 double value = 0;
                 Instant lastMaj = Instant.EPOCH;
 
-                for (gradeHistory history : grade.getHistory()) {
+                for (GradeHistory history : grade.getHistory()) {
                     Instant dateHistory = history.getDateTime()
                             .atZone(ZoneId.systemDefault())
                             .toInstant();
