@@ -1,3 +1,4 @@
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -6,19 +7,26 @@ import java.util.List;
 public class Grade {
     private double grade;
     private Student student;
-    private  Course course;
-    private List<GradeHistory> history;
+    private  Exam exam;
+    private List<GradeHistory> history = new ArrayList<>();
 
-    public Grade(Course course, Student student , double grade) {
-        this.course = course;
+    public Grade(Exam exam, Student student , double grade) {
+        this.exam = exam;
         this.student = student;
         this.grade = grade;
-        this.history = new ArrayList<>();
         this.history.add(new GradeHistory(grade , LocalDateTime.now(), "Valeur initiale"));
     }
 
-    public Course getCourse() {
-        return course;
+    public double getGradeAtTime(LocalDateTime time) {
+        return history.stream()
+                .filter(history -> !history.getDateTime().isAfter(time))
+                .mapToDouble(GradeHistory::getValue)
+                .reduce((first , second) -> second)
+                .orElse(grade);
+    }
+
+    public Exam getExam() {
+        return exam;
     }
 
     public double getGrade() {
