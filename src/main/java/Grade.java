@@ -1,6 +1,5 @@
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,12 +13,12 @@ public class Grade {
         this.exam = exam;
         this.student = student;
         this.grade = grade;
-        this.history.add(new GradeHistory(grade , LocalDateTime.now(), "Valeur initiale"));
+        this.history.add(new GradeHistory(grade , Instant.now(), "Valeur initiale"));
     }
 
-    public double getGradeAtTime(LocalDateTime time) {
+    public double getGradeAtTime(Instant time) {
         return history.stream()
-                .filter(history -> !history.getDateTime().isAfter(time))
+                .filter(history -> !history.getTime().isAfter(time))
                 .mapToDouble(GradeHistory::getValue)
                 .reduce((first , second) -> second)
                 .orElse(grade);

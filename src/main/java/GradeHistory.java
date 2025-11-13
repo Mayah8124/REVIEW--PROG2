@@ -1,18 +1,18 @@
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public class GradeHistory {
     private double value;
-    private LocalDateTime dateTime;
+    private Instant time;
     private String motif;
 
-    public GradeHistory(double value , LocalDateTime dateTime , String motif) {
-        this.dateTime = dateTime;
+    public GradeHistory(double value , Instant time , String motif) {
+        this.time = time;
         this.motif = motif;
         this.value = value;
     }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
+    public Instant getTime() {
+        return time;
     }
 
     public String getMotif() {

@@ -40,10 +40,10 @@ public class Exam {
         return title;
     }
 
-    public double getExamGrade(Student student ,Instant time) {
+    public double getExamGrade(Student student ,Instant t) {
         return grades.stream()
                 .filter(g -> g.getStudent().equals(student))
-                .mapToDouble(g -> g.getGradeAtTime(time))
+                .mapToDouble(g -> g.getGradeAtTime(t))
                 .findFirst()
                 .orElse(0.0);
     }
