@@ -3,7 +3,6 @@ import org.junit.jupiter.api.Test;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -11,49 +10,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class GradeManagerTest {
 
     @Test
-    public void getExamGradeTest() {
+    public void getGradeTest() {
         Teacher teacher = new Teacher(
                 1 , "John" , "Smith" , LocalDate.of(1999, 2, 12), "john@gmail.com" , "0331234567" , "Devops"
         );
 
         Course course = new Course(
-                1 , 5 , teacher
-        );
-
-        Student student = new Student(
-                1 , "Rose" , "Marie" , LocalDate.of(2007 , 3 , 15) , "rose@gmail.com" , "0342516798" , "K1"
-        );
-
-        LocalDateTime examDate = LocalDateTime.of(2025, 3, 3, 15, 15);
-
-        Exam exam = new Exam(
-                1 , "POO" , course , examDate , 3
-        );
-
-        Grade grade = new Grade(
-                course , student , 15.0
-        );
-
-        grade.getHistory().add(new GradeHistory(14.0 , examDate.minusDays(4), "initial grade"));
-        grade.getHistory().add(new GradeHistory(17.0 , examDate.minusDays(4), "retake"));
-
-        List<Grade> allGrades = List.of(grade);
-
-        Instant examInstant = examDate.atZone(ZoneId.systemDefault()).toInstant();
-
-        double result = exam.getExamGrade(student , allGrades ,examInstant);
-
-        assertEquals(14 , result , 0.001);
-    }
-
-    @Test
-    public void getCourseGradeTest() {
-        Teacher teacher = new Teacher(
-                1 , "John" , "Smith" , LocalDate.of(1999, 2, 12), "john@gmail.com" , "0331234567" , "Devops"
-        );
-
-        Course course = new Course(
-                1 , 5 , teacher
+                1 , "PROG2" , 6 , teacher , List.of()
         );
 
         Student student = new Student(
@@ -61,25 +24,32 @@ public class GradeManagerTest {
         );
 
         Exam exam = new Exam(
-                1 , "POO" , course , LocalDateTime.now().minusDays(2) , 3
+                1 , "Exam1" , course , LocalDateTime.of(2024, 1, 10, 9, 0), 2, List.of()
         );
 
         Exam exam2 = new Exam(
-                2 , "POO" , course , LocalDateTime.now().minusDays(5) , 5
+                2 , "retake" , course ,  LocalDateTime.of(2024, 2, 10, 9, 0), 3, List.of()
         );
 
-        Grade grade1 = new Grade(course, student, 14.0);
-        grade1.getHistory().add(new GradeHistory(16.0, LocalDateTime.now().minusDays(2), "retake"));
-        Grade grade2 = new Grade(course, student, 18.0);
-        grade2.getHistory().add(new GradeHistory(20.0, LocalDateTime.now().minusDays(5), "retake"));
+        Grade grade1 = new Grade(exam , student , 10.0);
+        Grade grade2 = new Grade(exam2, student , 15.0);
 
-        List<Exam> exams = List.of(exam, exam2);
-        List<Grade> grades = List.of(grade1, grade2);
+        exam = new Exam(
+                1 , "Exam1" , course , exam.getCourse().getExams().isEmpty() ? exam.getDateTime() : null , 2 , List.of(grade1)
+        );
+
+        exam2 = new Exam(
+                2 , "retake" , course , exam2.getCourse().getExams().isEmpty() ? exam2.getDateTime() : null , 3 , List.of(grade2)
+        );
+
+        course = new Course(
+                1 , "PROG2" , 6 , teacher , List.of(exam , exam2)
+        );
 
         Instant now = Instant.now();
 
-        double courseGrade = course.getCourseGrade(student , now , exams , grades);
-
-        assertEquals(14 , courseGrade , 0.001);
+        assertEquals(10.0, exam.getExamGrade(student, now));
+        assertEquals(15.0, exam2.getExamGrade(student, now));
+        assertEquals(13.0, course.getCourseGrade(student, now));
     }
 }
