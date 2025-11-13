@@ -3,16 +3,25 @@ import java.util.List;
 
 public class Course {
     private int id;
+    private String label;
     private int credit;
     private Teacher teacher;
-    private enum label {
-        PROG1 , PROG2 , API , POO , SYS1 , SYS2 , WEB1 , WEB2
-    }
+    private List<Exam> exams;
 
-    public Course(int id , int credit , Teacher teacher) {
+    public Course(int id , String label, int credit , Teacher teacher , List<Exam> exams) {
         this.id = id;
+        this.label = label;
         this.credit = credit;
         this.teacher = teacher;
+        this.exams = exams;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public List<Exam> getExams() {
+        return exams;
     }
 
     public int getCredit() {
@@ -27,19 +36,16 @@ public class Course {
         return teacher;
     }
 
-    public double getCourseGrade(Student student, Instant t , List<Exam> exams , List<Grade> allGrades) {
-        List<Exam> examList = exams.stream()
-                .filter(e -> e.getCourse().equals(this))
-                .toList();
+    public double getCourseGrade(Student student, Instant t ) {
+        double weightedSum = 0;
+        double coeffSum = 0;
 
-        double sum = examList.stream()
-                .mapToDouble(exam -> exam.getExamGrade(student , allGrades, t) * exam.getCoefficient())
-                .sum();
+        for (Exam exam : exams) {
+            double grade = exam.getExamGrade(student, t);
+            weightedSum += grade * exam.getCoefficient();
+            coeffSum += exam.getCoefficient();
+        }
 
-        double coeffSum = examList.stream()
-                .mapToDouble(Exam::getCoefficient)
-                .sum();
-
-        return coeffSum == 0 ? 0 : sum / coeffSum;
+        return coeffSum > 0 ? weightedSum / coeffSum : 0.0;
     }
 }
